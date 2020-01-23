@@ -1,0 +1,48 @@
+server:
+  port: 39913
+spring:
+  application:
+    name: provider
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    password: root
+    url: jdbc:mysql://localhost:3306/db_studentinfo?serverTimezone=UTC
+    username: root
+  freemarker:
+    content-type: text/html
+    suffix: .ftl
+    template-loader-path: classpath:/templates
+  jpa:
+    hibernate:
+      ddl-auto: update
+      show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+        hbm2ddl:
+          auto: update
+#dubbo:
+#  application:
+#    id: dubbo-provider
+#    name: dubbo-provider
+#  protocol:
+#    id: dubbo
+#    name: dubbo
+#    port: '20881'
+#    default: true
+#  registry:
+#    address: zookeeper://192.168.101.50:2181
+#    id: zookeeper
+#  scan:
+#    base-packages: com.example.service.impl
+
+
+eureka:
+  instance:
+    prefer-ip-address: true #注册服务的时候使用服务的ip地址
+    instance-id: ${spring.application.name}:${server.port}
+    lease-renewal-interval-in-seconds: 5
+
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka

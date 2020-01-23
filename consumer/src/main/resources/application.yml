@@ -1,0 +1,74 @@
+#dubbo:
+#  ## RegistryConfig Bean
+#  application:
+#    id: comsumer
+#    name: comsumer
+#
+#  registry:
+#    id: zookeeper
+#    address: zookeeper://192.168.101.50:2181
+#    default: true
+server:
+  port: 8082
+spring:
+  application:
+    name: comsumer
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    password: root
+    url: jdbc:mysql://localhost:3306/db_studentinfo?serverTimezone=UTC
+    username: root
+  freemarker:
+    content-type: text/html
+    suffix: .ftl
+    template-loader-path: classpath:/templates
+  jpa:
+    hibernate:
+      ddl-auto: update
+      show-sql: 'true'
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+        hbm2ddl:
+          auto: update
+eureka:
+  instance:
+    prefer-ip-address: true #注册服务的时候使用服务的ip地址
+
+  client:
+    healthcheck:
+      enabled: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+logging:
+  level:
+    com.example.consumer.feign.FeignService2: DEBUG
+    com.example.consumer.feign.DemoFeignService: DEBUG
+
+# 解决第一次请求报超时异常的方案：
+hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 5000
+# 或者：
+# hystrix.command.default.execution.timeout.enabled: false
+# 或者：
+#feign.hystrix.enabled: false
+provider:
+  ribbon:
+    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
+#    listOfServers: localhost:39909
+#ribbon:
+#  eureka:
+#   enabled: false
+management:
+  health:
+    defaults:
+     enabled: true
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+feign:
+  hystrix:
+    enabled: true
